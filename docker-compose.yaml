@@ -1,0 +1,72 @@
+x-anchors:
+  port: &port ${PORT:-8080}
+  port_rw: &port_rw ${PORT_RW:-8081} # set read-write live web server port
+  port_ro: &port_ro ${PORT_RO:-8082} # set read-only live web server port
+  port_vnc: &port_vnc ${PORT_VNC:-5900}
+  HOSTIP: &hostip ${HOSTIP:-192.168.0.2}
+  RUN_TYPE: &run_type ${RUN_TYPE:-web}              # can be either 'vnc' or 'web' 
+  #ROOT_IMAGE: &root_image debian:stable-slim
+  ROOT_IMAGE: &root_image ${ROOT_IMAGE:-alpine}     # base OS image (can be debian flavors or alpine)
+  DIMENSIONS: &dimensions ${DIMENSIONS:-1600x960}   # hamclock dimensions:  800x480 1600x960 2400x1440 3200x1920
+
+services:
+  hamclock-builder:
+    profiles: ["do-not-run"]
+    image: &builder hamclock-builder
+    network_mode: bridge
+    pull_policy: build
+    build: 
+      context: hamclock-builder
+      dockerfile: Dockerfile
+      tags:
+        - *builder
+  hamclock:
+    container_name: &container hamclock
+    image: &image kd2qar/hamclock
+    environment:
+      TZ: ${TZ:-UTC}
+    build:
+      #no_cache: true
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - *image
+      args:
+        COMPOSE_PROJECT_NAME: $COMPOSE_PROJECT_NAME
+        BUILDER_IMAGE: *builder
+        RUN_TYPE: *run_type  # can be either 'vnc' or 'web'
+        ROOT_IMAGE: *root_image
+        DIMENSIONS: *dimensions
+ 
+    hostname: *container
+    network_mode: bridge
+    volumes:
+      - type: bind
+        source: /srv/hamclock/.hamclock
+        target: /srv/hamclock/.hamclock
+    ports:
+      - host_ip: *hostip
+        target: 8081
+        published: *port_rw
+        protocol: tcp
+      - host_ip: *hostip
+        target: 8082
+        published: *port_ro
+        protocol: tcp
+      - host_ip: *hostip
+        target: 5900
+        published: *port_vnc
+        protocol: tcp
+      - target: 8080
+        host_ip: *hostip
+        published: *port
+        protocol: tcp
+    restart: unless-stopped
+    cpus: 0.2
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+
+
