@@ -126,7 +126,7 @@ COPY --from=buildstage /hamclock/hamclock  ./hamclock
 USER root
 COPY --chmod=755 <<-ENTRYPOINT /srv/hamclock/entrypoint.sh
 	#!/bin/sh
-	/srv/hamclock/hamclock -d /srv/hamclock/.hamclock -o
+	nice 10 /srv/hamclock/hamclock -d /srv/hamclock/.hamclock -o
 	ENTRYPOINT
 
 #################################################
