@@ -126,7 +126,7 @@ COPY --from=buildstage /hamclock/hamclock  ./hamclock
 USER root
 COPY --chmod=755 <<-ENTRYPOINT /srv/hamclock/entrypoint.sh
 	#!/bin/sh
-	nice 10 /srv/hamclock/hamclock -d /srv/hamclock/.hamclock -o
+	nice -n 25 /srv/hamclock/hamclock -d /srv/hamclock/.hamclock -o
 	ENTRYPOINT
 
 #################################################
@@ -176,7 +176,7 @@ COPY --from=hamclick / /
 #--start-interval=DURATION (default: 5s)
 #--retries=N (default: 3)
 
-HEALTHCHECK --interval=10m --timeout=15s \
+HEALTHCHECK --interval=5m --timeout=15s \
             CMD curl --fail localhost:8080/get_sys.txt
 WORKDIR /srv/hamclock/
 

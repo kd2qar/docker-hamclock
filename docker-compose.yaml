@@ -8,6 +8,7 @@ x-anchors:
   #ROOT_IMAGE: &root_image debian:stable-slim
   ROOT_IMAGE: &root_image ${ROOT_IMAGE:-alpine}     # base OS image (can be debian flavors or alpine)
   DIMENSIONS: &dimensions ${DIMENSIONS:-1600x960}   # hamclock dimensions:  800x480 1600x960 2400x1440 3200x1920
+  PASSWORD: &password ${PASSWORD:-xyzzy}
 
 services:
   hamclock-builder:
