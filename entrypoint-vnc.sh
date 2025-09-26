@@ -9,7 +9,7 @@ if [ true ]; then
 
 	x11vnc -nopw --forever -display "${DISPLAY}" -noscr
 else
-  ## THIS STUFF DOESN"T WORK AND ID DONT KNOW WHY!
+  ## THIS STUFF DOESN"T WORK AND I DONT KNOW WHY!
     DISPLAY=:0
     Xvfb :0 -pixdepths 8,16,32  -screen 1  1600x960x16 &
     sleep 20
