@@ -40,6 +40,10 @@ services:
         DIMENSIONS: *dimensions
  
     hostname: *container
+
+    extra_hosts:
+      - "clearskyinstitute.com:3.128.20.228"    ## redirect to hamclock.com
+
     network_mode: bridge
     volumes:
       - type: bind

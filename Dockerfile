@@ -74,7 +74,12 @@ RUN <<-BUILDTOOLS
 
 WORKDIR /hamclock
 
-ADD https://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.tgz /hamclock/
+## dowload may change
+# 72.167.43.150
+#ADD https://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.tgz /hamclock/
+#ADD https://72.167.43.150/ham/HamClock/ESPHamClock.tgz /hamclock/
+COPY ./ESPHamClock.tgz /hamclock/ 
+
 RUN tar xzf ESPHamClock.tgz && rm ESPHamClock.tgz
 
 ## BUILDSTAGE STAGE
